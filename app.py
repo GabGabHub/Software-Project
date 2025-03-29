@@ -57,7 +57,7 @@ def page1():
                 fig, ax = plt.subplots()
                 ax.hist(data, bins='auto')
                 ax.set_title(title)
-                plt.tight_layout(pad = 2, h_pad = 2)
+                plt.tight_layout(pad = 2, h_pad = 8)
                 st.pyplot(fig)
                 st.write(f"-------------Statistics for {title}-------------")
                 st.write("average: ", np.mean(data))

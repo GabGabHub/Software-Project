@@ -14,19 +14,21 @@ def home_page():
 
 def page1():
     st.title("Page 1")
-    st.title("CLIENTS_LEASING500 Statistical Analysis")  # Title for the page
+    st.title("Quality of Life Statistical Analysis")  # Title for the page
 
     # Access the DataFrame from session state
-    if "df" in st.session_state:
-        dfm = st.session_state.df
+    analysis_type = st.radio("Choose Analysis Type:", ("Pandas Methods", "Scipy Package"))
+    dfm = st.session_state.df
 
+    if analysis_type == "Pandas Methods":
         # Display descriptive statistics
         st.header("1. Pandas Methods")
         st.write(dfm.describe())
 
         # Display histograms
         st.subheader("Histograms")
-        dfm.hist()
+        # Make the histograms look nicer (3 per column)
+        dfm.hist(bins=30, figsize=(12, 8), layout=(4, -1))
         st.pyplot(plt)
 
         # Display kurtosis
@@ -38,28 +40,35 @@ def page1():
         st.subheader("Skewness")
         st.write(numeric_dfm.skew())
 
-        # Display analysis using scipy
+    elif analysis_type == "Scipy Package":
         st.header("2. Scipy Package")
-        y = dfm['REQUESTED_AMOUNT']
-        x = dfm['AGE']
 
-        # Function to display statistics and histogram
-        def display_stats_hist(data, title):
-            fig, ax = plt.subplots()
-            ax.hist(data, bins='auto')
-            ax.set_title(title)
-            st.pyplot(fig)
-            st.write(f"-------------Statistics for {title}-------------")
-            st.write("average: ", np.mean(data))
-            st.write("variance  : ", np.var(data))
-            st.write("skewness : ", skew(data))
-            st.write("kurtosis : ", kurtosis(data))
+        # Selectbox for variables
+        numeric_columns = dfm.select_dtypes(include=np.number).columns.tolist()
+        if numeric_columns:
+            selected_variable1 = st.selectbox("Select Variable 1:", numeric_columns)
+            selected_variable2 = st.selectbox("Select Variable 2:", numeric_columns)
 
-        # Display for REQUESTED_AMOUNT
-        display_stats_hist(y, 'REQUESTED_AMOUNT')
+            y = dfm[selected_variable1]
+            x = dfm[selected_variable2]
 
-        # Display for AGE
-        display_stats_hist(x, 'AGE')
+            # Function to display statistics and histogram
+            def display_stats_hist(data, title):
+                fig, ax = plt.subplots()
+                ax.hist(data, bins='auto')
+                ax.set_title(title)
+                st.pyplot(fig)
+                st.write(f"-------------Statistics for {title}-------------")
+                st.write("average: ", np.mean(data))
+                st.write("variance  : ", np.var(data))
+                st.write("skewness : ", skew(data))
+                st.write("kurtosis : ", kurtosis(data))
+
+            # Display for selected variables
+            display_stats_hist(y, selected_variable1)
+            display_stats_hist(x, selected_variable2)
+        else:
+            st.write("No numerical columns found in the CSV file.")
 
     else:
         st.write("Please upload a file on the home page.")
@@ -76,8 +85,11 @@ def page2():
         # Select numeric columns
         numeric_dfm = dfm.select_dtypes(include=['number'])
 
+        # Correlation method selection
+        correlation_method = st.selectbox("Select Correlation Method", ["pearson", "kendall", "spearman"])
+
         # Calculate correlation
-        dfm_corr = numeric_dfm.corr()
+        dfm_corr = numeric_dfm.corr(method=correlation_method)
 
         # Display correlation matrix
         st.write("## Correlation Matrix")
@@ -102,17 +114,23 @@ def page2():
         # Pairplot
         st.write("## Pairplot")
 
-        pairplot_fig = sns.pairplot(dfm[dfm['REQUESTED_AMOUNT'] > 100000],
-                                     vars=['AGE', 'VAL_CREDITS_RON', 'REQUESTED_AMOUNT', 'INCOME_PER_YEAR_RON'],
-                                     hue='PRESCORING', diag_kind='hist')
+        # Get numerical columns for multiselect
+        numerical_columns = numeric_dfm.columns.tolist()
 
-        st.pyplot(plt)
+        # Choose variables for the pairplot
+        selected_columns = st.multiselect("Select variables for pairplot", numerical_columns)
+
+        if selected_columns:
+            pairplot_fig = sns.pairplot(dfm, vars=selected_columns, hue='PRESCORING', diag_kind='hist')
+            st.pyplot(pairplot_fig)
+
         # Heatmap
         st.write("## Heatmap")
-
-        fig, ax = plt.subplots(figsize=(10, 6))  # Create new figure
-        sns.heatmap(numeric_dfm.corr(), annot=True, ax=ax)  # Assign to ax
-        st.pyplot(fig)  # Use newly created figure
+        show_heatmap = st.checkbox("Show Heatmap", value=True)
+        if show_heatmap:
+            fig, ax = plt.subplots(figsize=(10, 6))  # Create new figure
+            sns.heatmap(numeric_dfm.corr(), annot=True, ax=ax)  # Assign to ax
+            st.pyplot(fig)  # Use newly created figure
     else:
         st.write("Please upload a file on the home page.")
 
@@ -125,7 +143,7 @@ st.markdown(
     <style>
     div.stButton > button:first-child {
         background-color: #8FD3FE;
-        color: #CC8899;
+        color: #000000;
         border: none;
         padding: 10px 20px;
         text-align: center;

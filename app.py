@@ -70,7 +70,7 @@ def home_page():
     plt.title("Map of Romania - Boundaries, Rivers, and Cities", fontsize=14)
     plt.legend()
     plt.show()
-    st.pyplot()
+    st.pyplot(fig)
 
 def page1():
     st.title("Page 1")

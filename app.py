@@ -66,8 +66,6 @@ def home_page():
     st.dataframe(df)
 
     #this is to select a column for the map
-    st.dataframe(df.iloc[:, 1:])
-    
     columns = df.iloc[:, 1:].columns.tolist()
     selected_column = st.selectbox("Select a column to visualize:", columns)
 

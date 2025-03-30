@@ -12,10 +12,6 @@ import geopandas as gpd
 import folium
 import statsmodels.api as sm
 
-def remove_outliers_std(df, num_cols, threshold=3):
-    z_scores = np.abs((df[num_cols] - df[num_cols].mean()) / df[num_cols].std())
-    return df[(z_scores < threshold).all(axis=1)]
-
 def preprocess_data(df):
     df = df.fillna(0)
     num_cols = df.select_dtypes(include=['number']).columns
@@ -161,6 +157,9 @@ def page1():
         else:
             st.write("No numerical columns found in the CSV file.")
 
+def remove_outliers_std(df, num_cols, threshold):
+    z_scores = np.abs((df[num_cols] - df[num_cols].mean()) / df[num_cols].std())
+    return df[(z_scores < threshold).all(axis=1)]
 
 def page2():
     st.title("Page 2")
@@ -170,8 +169,8 @@ def page2():
     df = st.session_state.df
     df = preprocess_data(df)
 
-    num_cols = df.select_dtypes(include=['number']).columns.drop("Rank", errors='ignore')
-    df = remove_outliers_std(df, num_cols, threshold=3)
+    num_cols = df.iloc[:,2:].select_dtypes(include=['number'])
+    df = remove_outliers_std(df, num_cols, 3)
 
     #doing the HCA
     df = hierarchical_clustering(df)
@@ -202,33 +201,23 @@ def page3():
     df["Predicted Quality of Life"] = predictions 
     st.dataframe(df[["Country", "Quality of Life Index", "Predicted Quality of Life"]])
 
-   
-    # Select top N countries for readability (optional)
-    top_n = 20  # Adjust as needed
+    #top 10 countries get graphed
+    top_n = 10 
     df_sorted = df.sort_values(by="Quality of Life Index", ascending=False).head(top_n)
     
-    # Set positions for bars
-    x = np.arange(len(df_sorted))  # X locations for groups
-    width = 0.4  # Width of bars
+    x = np.arange(len(df_sorted)) 
+    width = 0.4
     
-    # Create figure
     fig, ax = plt.subplots(figsize=(12, 6))
-    
-    # Plot actual values (blue bars)
     ax.bar(x - width/2, df_sorted["Quality of Life Index"], width=width, label="Actual", color="blue")
-    
-    # Plot predicted values (orange bars)
     ax.bar(x + width/2, df_sorted["Predicted Quality of Life"], width=width, label="Predicted", color="orange")
     
-    # Labels & formatting
     ax.set_xlabel("Country")
     ax.set_ylabel("Quality of Life Index")
     ax.set_title("Actual vs. Predicted Quality of Life Index by Country")
     ax.set_xticks(x)
-    ax.set_xticklabels(df_sorted["Country"], rotation=45, ha="right")  # Rotate country names for readability
+    ax.set_xticklabels(df_sorted["Country"], rotation=45, ha="right")
     ax.legend()
-    
-    # Show in Streamlit
     st.pyplot(fig)
 
 

@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy.stats import kurtosis, skew
-from scipy.cluster.hierarchy import fcluster, linkage, dendogram
+from scipy.cluster.hierarchy import fcluster, linkage, dendrogram
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA

@@ -167,7 +167,7 @@ def page2():
     df = st.session_state.df
     df = preprocess_data(df)
 
-    num_cols = df.iloc[:,2:].select_dtypes(include=['number'])
+    num_cols = df.iloc[:, 1:].select_dtypes(include=['number'])
     df = remove_outliers_std(df, num_cols, threshold = 3)
 
     #doing the HCA

@@ -175,6 +175,10 @@ def page2():
     st.write("## Processed Data") 
     st.dataframe(df)
 
+    st.write("## Dendrogram")
+    fig, ax = plt.subplots(figsize=(12, 6))
+    num_cols = df.select_dtypes(include=['number']).columns
+    Z = linkage(df[num_cols], method='ward')
     dendrogram(Z, ax=ax, leaf_rotation=90, leaf_font_size=10)
     ax.set_title("Dendrogram")
     ax.set_xlabel("Sample Index")
@@ -182,7 +186,7 @@ def page2():
 
     st.pyplot(fig)
 
-    st.write("## K-Means Clustering Visualization")
+    st.write("## K-Means Clustering")
     fig, ax = plt.subplots()
     ax.scatter(X_pca[:, 0], X_pca[:, 1], c=df['KMeans_Cluster'], cmap='viridis')
     ax.set_xlabel("Principal Component 1")

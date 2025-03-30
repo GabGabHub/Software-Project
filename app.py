@@ -12,7 +12,7 @@ from sklearn.decomposition import PCA
 
 def preprocess_data(df):
     df = df.fillna(0)
-    num_cols = df[:,1:].select_dtypes(include=['number']).columns
+    num_cols = df[1:].select_dtypes(include=['number']).columns
     st.write(num_cols)
     scaler = StandardScaler()
     df[num_cols] = scaler.fit_transform(df[num_cols])

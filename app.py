@@ -10,7 +10,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 import geopandas as gpd
 import folium
-import statmodels.api as sm
+import statsmodels.api as sm
 
 def remove_outliers_std(df, num_cols, threshold=3):
     z_scores = np.abs((df[num_cols] - df[num_cols].mean()) / df[num_cols].std())

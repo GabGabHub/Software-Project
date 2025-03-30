@@ -63,7 +63,10 @@ def home_page():
     st.session_state.df = df  # Store the DataFrame
     st.dataframe(df)
     world = gpd.read_file("https://naciscdn.org/naturalearth/110m/cultural/ne_110m_admin_0_countries.zip")
+    fig, ax = plt.subplots(figsize=(10, 10))
+    cities = gpd.read_file("https://naciscdn.org/naturalearth/10m/cultural/ne_10m_populated_places.zip")
     world.plot()
+    cities.plot()
 
 def page1():
     st.title("Page 1")

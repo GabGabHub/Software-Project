@@ -41,6 +41,19 @@ def hierarchical_clustering(df):
     return df
 
 
+def correlation_analysis(df):
+    num_cols = df.select_dtypes(include=['number'])
+    correlation_method = st.selectbox("Select Correlation Method", ["pearson", "kendall", "spearman"])
+    df_corr = df[num_cols].corr(method=correlation_method)
+
+    st.write("## Correlation Matrix")
+    st.write(df_corr)
+
+    st.write("## Heatmap")
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.heatmap(df_corr, annot=True, ax=ax)
+    st.pyplot(fig)
+
 def kmeans_clustering(df):
     num_cols = df.select_dtypes(include=['number']).columns
     X = df[num_cols].values
@@ -136,17 +149,7 @@ def page2():
         st.write("## Processed Data")
         st.dataframe(df.head())
 
-        num_cols = df.select_dtypes(include=['number'])
-        correlation_method = st.selectbox("Select Correlation Method", ["pearson", "kendall", "spearman"])
-        df_corr = df[num_cols].corr(method=correlation_method)
-
-        st.write("## Correlation Matrix")
-        st.write(df_corr)
-
-        st.write("## Heatmap")
-        fig, ax = plt.subplots(figsize=(10, 6))
-        sns.heatmap(df_corr, annot=True, ax=ax)
-        st.pyplot(fig)
+        correlation_analysis(df)
 
         st.write("## K-Means Clustering Visualization")
         fig, ax = plt.subplots()

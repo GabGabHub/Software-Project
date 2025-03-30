@@ -65,7 +65,7 @@ def home_page():
     st.dataframe(df)
                 
     world = gpd.read_file("https://naciscdn.org/naturalearth/110m/cultural/ne_110m_admin_0_countries.zip")
-        world = world.merge(df, how="left", left_on="adm0_a3", right_on="Country_Code")
+    world = world.merge(df, how="left", left_on="adm0_a3", right_on="Country_Code")
     
     m = folium.Map(location=[20, 0], zoom_start=2)
     

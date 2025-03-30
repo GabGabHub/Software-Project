@@ -138,7 +138,6 @@ def page1():
     elif analysis_type == "Scipy Package":
         st.header("2. Scipy Package")
     
-    
         numeric_columns = dfm.select_dtypes(include=np.number).columns.tolist()
         if numeric_columns:
             selected_variable1 = st.selectbox("Select Variable 1:", numeric_columns)
@@ -169,7 +168,6 @@ def page2():
     st.title("Page 2")
     st.title("Hierarchical Cluster Analysis")
 
-
     #Preparing the data set for the HCA
     df = st.session_state.df
     df = preprocess_data(df)
@@ -182,7 +180,7 @@ def page2():
     df, X_pca = kmeans_clustering(df)
     
     st.write("## Processed Data (After Outlier Removal)")
-    st.dataframe(df.head())
+    st.dataframe(df)
 
     st.write("## K-Means Clustering Visualization")
     fig, ax = plt.subplots()

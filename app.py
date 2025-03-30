@@ -95,7 +95,7 @@ def home_page():
 
     #and this is how we put the map on the website, for some reason
     map_html = m._repr_html_()
-    st.write("##Interactive map")
+    st.write("## Interactive map")
     st.components.v1.html(map_html, height=600)
 
     # doing the map the simple way
@@ -104,7 +104,7 @@ def home_page():
     plt.title(f"Quality of Life Based on {selected_column}", fontsize=14)
     plt.legend()
     plt.show()
-    st.write("Matplot Map")
+    st.write("## Matplot Map")
     st.pyplot(fig)
 
 def page1():

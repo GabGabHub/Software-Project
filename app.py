@@ -163,9 +163,9 @@ def page2():
 
     #Preparing the data set for the HCA
     df = st.session_state.df
-    df = preprocess_data(df)
+    df = preprocess_data(df.iloc[:,1:])
 
-    num_cols = df.select_dtypes(include=['number']).columns.drop("Rank", errors='ignore')
+    num_cols = df.select_dtypes(include=['number'])
     df = remove_outliers_std(df, num_cols, threshold=3)
 
     #doing the HCA

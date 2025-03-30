@@ -202,12 +202,21 @@ def page3():
     predictions = model.predict(X)  
     df["Predicted Quality of Life"] = predictions 
     st.dataframe(df[["Quality of Life Index", "Predicted Quality of Life"]])
-    
+
+    #Predicted values
     fig, ax = plt.subplots()
-    ax.scatter(df["Quality of Life Index"], df["Predicted Quality of Life"], alpha=0.5)
-    ax.set_xlabel("Actual Quality of Life Index")
-    ax.set_ylabel("Predicted Quality of Life Index")
-    ax.set_title("Actual vs Predicted Values")
+    ax.scatter(df["Quality_of_Life_Index"], df["Predicted_Quality_of_Life"], 
+           color="blue", label="Predicted", alpha=0.6)
+    #Perfect values
+    ax.plot([df["Quality_of_Life_Index"].min(), df["Quality_of_Life_Index"].max()], 
+        [df["Quality_of_Life_Index"].min(), df["Quality_of_Life_Index"].max()], 
+        color="red", linestyle="dashed", label="Perfect Fit")
+
+    ax.set_xlabel("Actual Values")
+    ax.set_ylabel("Predicted Values")
+    ax.set_title("Actual vs. Predicted Quality of Life Index")
+    ax.legend()
+
     st.pyplot(fig)
 
 

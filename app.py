@@ -165,7 +165,7 @@ def page2():
     df = st.session_state.df
     df = preprocess_data(df.iloc[:,1:])
 
-    num_cols = df.select_dtypes(include=['number'])
+    num_cols = df.select_dtypes(include=['number']).columns
     st.write(num_cols)
     st.write(df)
     df = remove_outliers_std(df, num_cols, threshold=3)

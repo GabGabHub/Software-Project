@@ -6,3 +6,4 @@ scipy
 seaborn
 scikit-learn
 geopandas
+folium

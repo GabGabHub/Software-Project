@@ -43,6 +43,8 @@ def hierarchical_clustering(df):
 
 def correlation_analysis(df):
     num_cols = df.select_dtypes(include=['number'])
+    st.write(num_cols)
+    st.write('## WHAT THE SIGMA')
     correlation_method = st.selectbox("Select Correlation Method", ["pearson", "kendall", "spearman"])
     df_corr = df[num_cols].corr(method=correlation_method)
 

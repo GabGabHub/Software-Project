@@ -9,10 +9,13 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
+def remove_outliers_std(df, num_cols, threshold=3):
+    z_scores = np.abs((df[num_cols] - df[num_cols].mean()) / df[num_cols].std())
+    return df[(z_scores < threshold).all(axis=1)]
 
 def preprocess_data(df):
     df = df.fillna(0)
-    num_cols = df[1:].select_dtypes(include=['number']).columns.drop("Rank", errors='ignore')
+    num_cols = df.select_dtypes(include=['number']).columns
     st.write(num_cols)
     scaler = StandardScaler()
     df[num_cols] = scaler.fit_transform(df[num_cols])
@@ -125,16 +128,22 @@ def page1():
 
 def page2():
     st.title("Page 2")
-    st.title("Correlation Analysis")
+    st.title("Clustering Analysis")
 
     # Access the DataFrame from session state
     if "df" in st.session_state:
         df = st.session_state.df
-        df = preprocess_data(df)
+        df = preprocess_data(df)  # Standardization
+
+        # Remove outliers using standard deviation method
+        num_cols = df.select_dtypes(include=['number']).columns.drop("Rank", errors='ignore')
+        df = remove_outliers_std(df, num_cols, threshold=3)
+
+        # Apply clustering
         df = hierarchical_clustering(df)
         df, X_pca = kmeans_clustering(df)
 
-        st.write("## Processed Data")
+        st.write("## Processed Data (After Outlier Removal)")
         st.dataframe(df.head())
 
         st.write("## K-Means Clustering Visualization")

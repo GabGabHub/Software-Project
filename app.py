@@ -67,10 +67,10 @@ def home_page():
     world = gpd.read_file("https://naciscdn.org/naturalearth/110m/cultural/ne_110m_admin_0_countries.zip")
     m = folium.Map(location=[20, 0], zoom_start=2)
     folium.GeoJson(world, name='World Countries').add_to(m)
-    folium.LayerControl().add_to(m)
-    st.write(m)
+    map_html = m._repr_html_()
+    st.components.v1.html(map_html, height=600)
 
-
+    fig, ax = plt.subplots(figsize=(10, 10))
     world.plot(ax=ax, color="lightgray", edgecolor="black", linewidth=1)
     plt.title("Quality of life for every Country", fontsize=14)
     plt.legend()

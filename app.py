@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy.stats import kurtosis, skew
-from scipy.cluster.hierarchy import fcluster, linkage
+from scipy.cluster.hierarchy import fcluster, linkage, dendogram
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
@@ -174,6 +174,13 @@ def page2():
     
     st.write("## Processed Data") 
     st.dataframe(df)
+
+    dendrogram(Z, ax=ax, leaf_rotation=90, leaf_font_size=10)
+    ax.set_title("Dendrogram")
+    ax.set_xlabel("Sample Index")
+    ax.set_ylabel("Distance")
+
+    st.pyplot(fig)
 
     st.write("## K-Means Clustering Visualization")
     fig, ax = plt.subplots()

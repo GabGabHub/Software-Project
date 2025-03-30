@@ -29,6 +29,8 @@ def page1():
         st.subheader("Histograms")
         # Make the histograms look nicer (3 per column)
         dfm.hist(bins=30, figsize=(12, 8), layout=(4, -1))
+        plt.tight_layout()
+        # plt.subplots_adjust(hspace=0.5, wspace=0.5)
         st.pyplot(plt)
 
         # Display kurtosis
@@ -57,8 +59,6 @@ def page1():
                 fig, ax = plt.subplots()
                 ax.hist(data, bins='auto')
                 ax.set_title(title)
-                plt.tight_layout(pad = 2, h_pad = 8)
-                plt.subplots_adjust(hspace=0.5, wspace=0.5)
                 st.pyplot(fig)
                 st.write(f"-------------Statistics for {title}-------------")
                 st.write("average: ", np.mean(data))

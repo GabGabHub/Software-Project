@@ -8,6 +8,7 @@ from scipy.cluster.hierarchy import fcluster, linkage
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
+import geopandas as gpd
 
 def remove_outliers_std(df, num_cols, threshold=3):
     z_scores = np.abs((df[num_cols] - df[num_cols].mean()) / df[num_cols].std())
@@ -61,6 +62,8 @@ def home_page():
     df = pd.read_csv('quality_of_life_indices_by_country.csv')
     st.session_state.df = df  # Store the DataFrame
     st.dataframe(df)
+    world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
+    world.plot()
 
 def page1():
     st.title("Page 1")

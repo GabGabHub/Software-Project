@@ -63,6 +63,9 @@ def home_page():
     df = pd.read_csv('quality_of_life_indices_by_country.csv')
     st.session_state.df = df  # Store the DataFrame
     st.dataframe(df)
+
+    columns = df.columns.tolist()
+    selected_column = st.selectbox("Select a column to visualize:", columns)
                 
     world = gpd.read_file("https://naciscdn.org/naturalearth/110m/cultural/ne_110m_admin_0_countries.zip")
     world = world.merge(df, how="left", left_on="NAME", right_on="Country")

@@ -202,19 +202,33 @@ def page3():
     df["Predicted Quality of Life"] = predictions 
     st.dataframe(df[["Quality of Life Index", "Predicted Quality of Life"]])
 
-    #Predicted values
-    fig, ax = plt.subplots()
-    ax.plot(df.index, df["Quality of Life Index"], label="Actual", color="blue", linewidth=2)
-
-    # Plot predicted values in orange (dashed line)
-    ax.plot(df.index, df["Predicted Quality of Life"], label="Predicted", color="orange", linestyle="dashed", linewidth=2)
+   
+    # Select top N countries for readability (optional)
+    top_n = 20  # Adjust as needed
+    df_sorted = df.sort_values(by="Quality_of_Life_Index", ascending=False).head(top_n)
     
-    # Labels & title
-    ax.set_xlabel("Index")
+    # Set positions for bars
+    x = np.arange(len(df_sorted))  # X locations for groups
+    width = 0.4  # Width of bars
+    
+    # Create figure
+    fig, ax = plt.subplots(figsize=(12, 6))
+    
+    # Plot actual values (blue bars)
+    ax.bar(x - width/2, df_sorted["Quality_of_Life_Index"], width=width, label="Actual", color="blue")
+    
+    # Plot predicted values (orange bars)
+    ax.bar(x + width/2, df_sorted["Predicted_Quality_of_Life"], width=width, label="Predicted", color="orange")
+    
+    # Labels & formatting
+    ax.set_xlabel("Country")
     ax.set_ylabel("Quality of Life Index")
-    ax.set_title("Actual vs. Predicted Quality of Life Index")
+    ax.set_title("Actual vs. Predicted Quality of Life Index by Country")
+    ax.set_xticks(x)
+    ax.set_xticklabels(df_sorted["Country"], rotation=45, ha="right")  # Rotate country names for readability
     ax.legend()
     
+    # Show in Streamlit
     st.pyplot(fig)
 
 

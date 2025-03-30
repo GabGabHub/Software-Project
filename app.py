@@ -21,40 +21,6 @@ def preprocess_data(df):
 
     return df
 
-
-def hierarchical_clustering(df):
-    num_cols = df.select_dtypes(include=['number']).columns
-    X = df[num_cols].values
-
-    HC = linkage(X, method='ward')
-
-    def threshold(h):
-        n = h.shape[0]
-        dist_1 = h[1:n, 2]
-        dist_2 = h[0:n - 1, 2]
-        diff = dist_1 - dist_2
-        j = np.argmax(diff)
-        t = (h[j, 2] + h[j + 1, 2]) / 2
-        return t, j, n
-
-    t, j, n = threshold(HC)
-    k = n - j
-    labels = fcluster(HC, k, criterion='maxclust')
-    df['Hierarchical_Cluster'] = labels
-    return df
-
-
-def kmeans_clustering(df):
-    num_cols = df.select_dtypes(include=['number']).columns
-    X = df[num_cols].values
-
-    pca = PCA(n_components=2)
-    X_pca = pca.fit_transform(X)
-
-    kmeans = KMeans(n_clusters=5, n_init=10)
-    df['KMeans_Cluster'] = kmeans.fit_predict(X_pca)
-    return df, X_pca
-
 def home_page():
     st.title("Database")
     df = pd.read_csv('quality_of_life_indices_by_country.csv')
@@ -157,9 +123,41 @@ def page1():
         else:
             st.write("No numerical columns found in the CSV file.")
 
-def remove_outliers_std(df, num_cols, threshold):
+def remove_outliers_std(df, num_cols, threshold = 3):
     z_scores = np.abs((df[num_cols] - df[num_cols].mean()) / df[num_cols].std())
     return df[(z_scores < threshold).all(axis=1)]
+
+def hierarchical_clustering(df):
+    num_cols = df.select_dtypes(include=['number']).columns
+    X = df[num_cols].values
+
+    HC = linkage(X, method='ward')
+
+    def threshold(h):
+        n = h.shape[0]
+        dist_1 = h[1:n, 2]
+        dist_2 = h[0:n - 1, 2]
+        diff = dist_1 - dist_2
+        j = np.argmax(diff)
+        t = (h[j, 2] + h[j + 1, 2]) / 2
+        return t, j, n
+
+    t, j, n = threshold(HC)
+    k = n - j
+    labels = fcluster(HC, k, criterion='maxclust')
+    df['Hierarchical_Cluster'] = labels
+    return df
+
+def kmeans_clustering(df):
+    num_cols = df.select_dtypes(include=['number']).columns
+    X = df[num_cols].values
+
+    pca = PCA(n_components=2)
+    X_pca = pca.fit_transform(X)
+
+    kmeans = KMeans(n_clusters=5, n_init=10)
+    df['KMeans_Cluster'] = kmeans.fit_predict(X_pca)
+    return df, X_pca
 
 def page2():
     st.title("Page 2")
@@ -170,7 +168,7 @@ def page2():
     df = preprocess_data(df)
 
     num_cols = df.iloc[:,2:].select_dtypes(include=['number'])
-    df = remove_outliers_std(df, num_cols, 3)
+    df = remove_outliers_std(df, num_cols, threshold = 3)
 
     #doing the HCA
     df = hierarchical_clustering(df)

@@ -62,7 +62,7 @@ def home_page():
     df = pd.read_csv('quality_of_life_indices_by_country.csv')
     st.session_state.df = df  # Store the DataFrame
     st.dataframe(df)
-    world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
+    world = gpd.read_file('https://www.naturalearthdata.com/downloads/110m-cultural-vectors/.')
     world.plot()
 
 def page1():

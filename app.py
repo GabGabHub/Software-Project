@@ -1,3 +1,6 @@
+import os
+os.environ["SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL"] = "True"
+
 import streamlit as st
 import pandas as pd
 import numpy as np

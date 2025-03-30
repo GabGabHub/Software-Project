@@ -166,13 +166,13 @@ def page2():
     df = st.session_state.df
     df = preprocess_data(df.iloc[:,1:])
 
-    df = remove_outliers_std(df threshold=3)
+    df = remove_outliers_std(df, threshold=3)
 
     #doing the HCA
     df = hierarchical_clustering(df)
     df, X_pca = kmeans_clustering(df)
     
-    st.write("## Processed Data (After Outlier Removal)")
+    st.write("## Processed Data")
     st.dataframe(df)
 
     st.write("## K-Means Clustering Visualization")

@@ -179,8 +179,7 @@ def page2():
     fig, ax = plt.subplots(figsize=(12, 6))
     num_cols = df.select_dtypes(include=['number']).columns
     Z = linkage(df[num_cols], method='ward')
-    dendrogram(Z, ax=ax, leaf_rotation=90, leaf_font_size=10)
-    ax.set_title("Dendrogram")
+    dendrogram(Z, ax=ax, show_leaf_counts = False)
     ax.set_xlabel("Sample Index")
     ax.set_ylabel("Distance")
 

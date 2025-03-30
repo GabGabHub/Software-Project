@@ -61,7 +61,6 @@ def home_page():
     st.components.v1.html(map_html, height=600)
 
 def page1():
-    st.title("Page 1")
     st.title("Quality of Life Statistical Analysis")  
 
     analysis_type = st.radio("Choose Analysis Type:", ("Pandas Methods", "Scipy Package"))
@@ -160,7 +159,6 @@ def kmeans_clustering(df):
     
 
 def page2():
-    st.title("Page 2")
     st.title("Hierarchical Cluster Analysis")
 
     #Preparing the data set for the HCA

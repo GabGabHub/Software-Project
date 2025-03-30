@@ -12,15 +12,6 @@ import geopandas as gpd
 import folium
 import statsmodels.api as sm
 
-def preprocess_data(df):
-    df = df.fillna(0)
-    num_cols = df.select_dtypes(include=['number']).columns
-    st.write(num_cols)
-    scaler = StandardScaler()
-    df[num_cols] = scaler.fit_transform(df[num_cols])
-
-    return df
-
 def home_page():
     st.title("Database")
     df = pd.read_csv('quality_of_life_indices_by_country.csv')
@@ -34,6 +25,15 @@ def home_page():
     #reads map data and merges it with our dataset
     world = gpd.read_file("https://naciscdn.org/naturalearth/110m/cultural/ne_110m_admin_0_countries.zip")
     world = world.merge(df, how="left", left_on="NAME", right_on="Country")
+
+    # doing the map the simple way
+    fig, ax = plt.subplots(figsize=(10, 10))
+    world.plot(column=selected_column, ax=ax, legend=True, cmap='OrRd', edgecolor='black')
+    plt.title(f"Quality of Life Based on {selected_column}", fontsize=14)
+    plt.legend()
+    plt.show()
+    st.write("## Matplot Map")
+    st.pyplot(fig)
 
     # generates the interactive map
     m = folium.Map(location=[20, 0], zoom_start=2)
@@ -59,15 +59,6 @@ def home_page():
     map_html = m._repr_html_()
     st.write("## Interactive map")
     st.components.v1.html(map_html, height=600)
-
-    # doing the map the simple way
-    fig, ax = plt.subplots(figsize=(10, 10))
-    world.plot(column=selected_column, ax=ax, legend=True, cmap='OrRd', edgecolor='black')
-    plt.title(f"Quality of Life Based on {selected_column}", fontsize=14)
-    plt.legend()
-    plt.show()
-    st.write("## Matplot Map")
-    st.pyplot(fig)
 
 def page1():
     st.title("Page 1")
@@ -122,6 +113,15 @@ def page1():
             display_stats_hist(x, selected_variable2)
         else:
             st.write("No numerical columns found in the CSV file.")
+
+def preprocess_data(df):
+    df = df.fillna(0)
+    num_cols = df.select_dtypes(include=['number']).columns
+    st.write(num_cols)
+    scaler = StandardScaler()
+    df[num_cols] = scaler.fit_transform(df[num_cols])
+
+    return df
 
 def remove_outliers_std(df, num_cols, threshold=3):
     z_scores = np.abs((df[num_cols] - df[num_cols].mean()) / df[num_cols].std())

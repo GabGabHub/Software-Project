@@ -192,8 +192,8 @@ def page2():
 def page3():
     st.title("Multiple Regression Model")
     
-    Y = df["Quality_of_Life_Index"]  
-    X = df[["Cost_of_Living_Index", "Health_Care_Index", "Pollution_Index"]]
+    Y = df["Quality of Life Index"]  
+    X = df[["Cost of Living_Index", "Health Care Index", "Pollution Index"]]
 
     X = sm.add_constant(X)
     model = sm.OLS(Y, X).fit()
@@ -212,7 +212,7 @@ def page3():
 
 
 if "page" not in st.session_state:
-    st.session_state.page = "Home"  # Set initial page to "Home"
+    st.session_state.page = "Home"  
 
 st.markdown(
     """

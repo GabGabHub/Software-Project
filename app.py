@@ -123,7 +123,7 @@ def page1():
         else:
             st.write("No numerical columns found in the CSV file.")
 
-def remove_outliers_std(df, num_cols, threshold = 3):
+def remove_outliers_std(df, num_cols, threshold=3):
     z_scores = np.abs((df[num_cols] - df[num_cols].mean()) / df[num_cols].std())
     return df[(z_scores < threshold).all(axis=1)]
 
@@ -158,6 +158,7 @@ def kmeans_clustering(df):
     kmeans = KMeans(n_clusters=5, n_init=10)
     df['KMeans_Cluster'] = kmeans.fit_predict(X_pca)
     return df, X_pca
+    
 
 def page2():
     st.title("Page 2")
@@ -168,7 +169,7 @@ def page2():
     df = preprocess_data(df)
 
     num_cols = df.select_dtypes(include=['number']).columns.drop("Rank", errors='ignore')
-    df = remove_outliers_std(df, num_cols, threshold = 3)
+    df = remove_outliers_std(df, num_cols, threshold=3)
 
     #doing the HCA
     df = hierarchical_clustering(df)

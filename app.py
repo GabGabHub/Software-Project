@@ -66,7 +66,7 @@ def home_page():
     fig, ax = plt.subplots(figsize=(10, 10))
     cities = gpd.read_file("https://naciscdn.org/naturalearth/10m/cultural/ne_10m_populated_places.zip")
     world.plot(ax=ax, color="lightgray", edgecolor="black", linewidth=1)
-    cities.plot(ax=ax, color="red", markersize=20, label="Cities")
+    cities.plot(ax=ax, color="red", edgecolor="red", linewidth=1, label="Cities")
     plt.title("Map of Romania - Boundaries, Rivers, and Cities", fontsize=14)
     plt.legend()
     plt.show()

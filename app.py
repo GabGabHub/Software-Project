@@ -190,7 +190,6 @@ def page2():
 def page3():
     st.title("Multiple Regression Model")
     df = st.session_state.df
-    st.write(df.columns)
     
     Y = df["Quality of Life Index"]  
     X = df[["Cost of Living Index", "Health Care Index", "Pollution Index"]]
@@ -205,11 +204,11 @@ def page3():
 
     #Predicted values
     fig, ax = plt.subplots()
-    ax.scatter(df["Quality_of_Life_Index"], df["Predicted_Quality_of_Life"], 
+    ax.scatter(df["Quality of Life Index"], df["Predicted Quality of Life"], 
            color="blue", label="Predicted", alpha=0.6)
     #Perfect values
-    ax.plot([df["Quality_of_Life_Index"].min(), df["Quality_of_Life_Index"].max()], 
-        [df["Quality_of_Life_Index"].min(), df["Quality_of_Life_Index"].max()], 
+    ax.plot([df["Quality of Life Index"].min(), df["Quality of Life Index"].max()], 
+        [df["Quality of Life Index"].min(), df["Quality of Life Index"].max()], 
         color="red", linestyle="dashed", label="Perfect Fit")
 
     ax.set_xlabel("Actual Values")

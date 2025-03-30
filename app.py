@@ -65,14 +65,35 @@ def home_page():
     st.dataframe(df)
                 
     world = gpd.read_file("https://naciscdn.org/naturalearth/110m/cultural/ne_110m_admin_0_countries.zip")
+        world = world.merge(df, how="left", left_on="adm0_a3", right_on="Country_Code")
+    
     m = folium.Map(location=[20, 0], zoom_start=2)
-    folium.GeoJson(world, name='World Countries').add_to(m)
+    
+    # Create a function to color countries based on the selected column
+    def color_function(feature):
+        value = feature['properties'][selected_column] if feature['properties'][selected_column] is not None else 0
+        return 'green' if value > 0 else 'lightgray'  # Adjust colors based on your needs
+
+    folium.GeoJson(
+        world,
+        style_function=lambda feature: {
+            'fillColor': color_function(feature),
+            'color': 'black',
+            'weight': 1,
+            'fillOpacity': 0.6,
+        },
+        name='World Countries'
+    ).add_to(m)
+
+    bounds = [[-60, -180], [85, 180]]
+    m.fit_bounds(bounds)
     map_html = m._repr_html_()
     st.components.v1.html(map_html, height=600)
 
+    # Plotting with Matplotlib
     fig, ax = plt.subplots(figsize=(10, 10))
-    world.plot(ax=ax, color="lightgray", edgecolor="black", linewidth=1)
-    plt.title("Quality of life for every Country", fontsize=14)
+    world.plot(column=selected_column, ax=ax, legend=True, cmap='OrRd', edgecolor='black')
+    plt.title(f"Quality of Life Based on {selected_column}", fontsize=14)
     plt.legend()
     plt.show()
     st.pyplot(fig)

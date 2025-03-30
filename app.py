@@ -2,12 +2,58 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats import kurtosis, skew
 import seaborn as sns
+from scipy.stats import kurtosis, skew
+from scipy.cluster.hierarchy import fcluster, linkage
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
 
+
+def preprocess_data(df):
+    df = df.fillna(0)
+    num_cols = df.select_dtypes(include=['number']).columns
+    scaler = StandardScaler()
+    df[num_cols] = scaler.fit_transform(df[num_cols])
+
+    return df
+
+
+def hierarchical_clustering(df):
+    num_cols = df.select_dtypes(include=['number']).columns
+    X = df[num_cols].values
+
+    HC = linkage(X, method='ward')
+
+    def threshold(h):
+        n = h.shape[0]
+        dist_1 = h[1:n, 2]
+        dist_2 = h[0:n - 1, 2]
+        diff = dist_1 - dist_2
+        j = np.argmax(diff)
+        t = (h[j, 2] + h[j + 1, 2]) / 2
+        return t, j, n
+
+    t, j, n = threshold(HC)
+    k = n - j
+    labels = fcluster(HC, k, criterion='maxclust')
+    df['Hierarchical_Cluster'] = labels
+    return df
+
+
+def kmeans_clustering(df):
+    num_cols = df.select_dtypes(include=['number']).columns
+    X = df[num_cols].values
+
+    pca = PCA(n_components=2)
+    X_pca = pca.fit_transform(X)
+
+    kmeans = KMeans(n_clusters=5, n_init=10)
+    df['KMeans_Cluster'] = kmeans.fit_predict(X_pca)
+    return df, X_pca
 
 def home_page():
-    st.title("Home Page")
+    st.title("Database")
     df = pd.read_csv('quality_of_life_indices_by_country.csv')
     st.session_state.df = df  # Store the DataFrame
     st.dataframe(df)
@@ -82,57 +128,33 @@ def page2():
 
     # Access the DataFrame from session state
     if "df" in st.session_state:
-        dfm = st.session_state.df
+        df = st.session_state.df
+        df = preprocess_data(df)
+        df = hierarchical_clustering(df)
+        df, X_pca = kmeans_clustering(df)
 
-        # Select numeric columns
-        numeric_dfm = dfm.select_dtypes(include=['number'])
+        st.write("## Processed Data")
+        st.dataframe(df.head())
 
-        # Correlation method selection
+        num_cols = df.select_dtypes(include=['number'])
         correlation_method = st.selectbox("Select Correlation Method", ["pearson", "kendall", "spearman"])
+        df_corr = df[num_cols].corr(method=correlation_method)
 
-        # Calculate correlation
-        dfm_corr = numeric_dfm.corr(method=correlation_method)
-
-        # Display correlation matrix
         st.write("## Correlation Matrix")
-        st.write(dfm_corr)
+        st.write(df_corr)
 
-        # Scatter plot options
-        st.write("## Scatter Plot")
-
-        # Create and display scatter plot
-        fig, ax = plt.subplots()
-        ax.scatter(dfm["AGE"], dfm["REQUESTED_AMOUNT"])
-        ax.set_xlabel("AGE")
-        ax.set_ylabel("REQUESTED_AMOUNT")
-        st.pyplot(fig)
-
-        fig, ax = plt.subplots()
-        ax.scatter(dfm["FIDELITY"], dfm["DEPOSIT_AMOUNT"])
-        ax.set_xlabel("FIDELITY")
-        ax.set_ylabel("DEPOSIT_AMOUNT")
-        st.pyplot(fig)
-
-        # Pairplot
-        st.write("## Pairplot")
-
-        # Get numerical columns for multiselect
-        numerical_columns = numeric_dfm.columns.tolist()
-
-        # Choose variables for the pairplot
-        selected_columns = st.multiselect("Select variables for pairplot", numerical_columns)
-
-        if selected_columns:
-            pairplot_fig = sns.pairplot(dfm, vars=selected_columns, hue='PRESCORING', diag_kind='hist')
-            st.pyplot(pairplot_fig)
-
-        # Heatmap
         st.write("## Heatmap")
-        show_heatmap = st.checkbox("Show Heatmap", value=True)
-        if show_heatmap:
-            fig, ax = plt.subplots(figsize=(10, 6))  # Create new figure
-            sns.heatmap(numeric_dfm.corr(), annot=True, ax=ax)  # Assign to ax
-            st.pyplot(fig)  # Use newly created figure
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.heatmap(df_corr, annot=True, ax=ax)
+        st.pyplot(fig)
+
+        st.write("## K-Means Clustering Visualization")
+        fig, ax = plt.subplots()
+        ax.scatter(X_pca[:, 0], X_pca[:, 1], c=df['KMeans_Cluster'], cmap='viridis')
+        ax.set_xlabel("Principal Component 1")
+        ax.set_ylabel("Principal Component 2")
+        st.pyplot(fig)
+
     else:
         st.write("Please upload a file on the home page.")
 

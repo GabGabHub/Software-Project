@@ -174,7 +174,6 @@ def page2():
     
     st.write("## Processed Data") 
     st.dataframe(df)
-    st.dataframe(df)
 
     st.write("## K-Means Clustering Visualization")
     fig, ax = plt.subplots()

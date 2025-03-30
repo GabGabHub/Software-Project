@@ -12,7 +12,7 @@ from sklearn.decomposition import PCA
 
 def preprocess_data(df):
     df = df.fillna(0)
-    num_cols = df[1:].select_dtypes(include=['number']).columns
+    num_cols = df[2:].select_dtypes(include=['number']).columns
     st.write(num_cols)
     scaler = StandardScaler()
     df[num_cols] = scaler.fit_transform(df[num_cols])
@@ -41,21 +41,6 @@ def hierarchical_clustering(df):
     df['Hierarchical_Cluster'] = labels
     return df
 
-
-def correlation_analysis(df):
-    num_cols = df.select_dtypes(include=['number'])
-    st.write(num_cols)
-    st.write('## WHAT THE SIGMA')
-    correlation_method = st.selectbox("Select Correlation Method", ["pearson", "kendall", "spearman"])
-    df_corr = df[num_cols].corr(method=correlation_method)
-
-    st.write("## Correlation Matrix")
-    st.write(df_corr)
-
-    st.write("## Heatmap")
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sns.heatmap(df_corr, annot=True, ax=ax)
-    st.pyplot(fig)
 
 def kmeans_clustering(df):
     num_cols = df.select_dtypes(include=['number']).columns
@@ -151,8 +136,6 @@ def page2():
 
         st.write("## Processed Data")
         st.dataframe(df.head())
-
-        correlation_analysis(df)
 
         st.write("## K-Means Clustering Visualization")
         fig, ax = plt.subplots()

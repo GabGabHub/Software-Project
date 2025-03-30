@@ -205,7 +205,7 @@ def page3():
    
     # Select top N countries for readability (optional)
     top_n = 20  # Adjust as needed
-    df_sorted = df.sort_values(by="Quality_of_Life_Index", ascending=False).head(top_n)
+    df_sorted = df.sort_values(by="Quality of Life Index", ascending=False).head(top_n)
     
     # Set positions for bars
     x = np.arange(len(df_sorted))  # X locations for groups
@@ -215,10 +215,10 @@ def page3():
     fig, ax = plt.subplots(figsize=(12, 6))
     
     # Plot actual values (blue bars)
-    ax.bar(x - width/2, df_sorted["Quality_of_Life_Index"], width=width, label="Actual", color="blue")
+    ax.bar(x - width/2, df_sorted["Quality of Life Index"], width=width, label="Actual", color="blue")
     
     # Plot predicted values (orange bars)
-    ax.bar(x + width/2, df_sorted["Predicted_Quality_of_Life"], width=width, label="Predicted", color="orange")
+    ax.bar(x + width/2, df_sorted["Predicted Quality of Life"], width=width, label="Predicted", color="orange")
     
     # Labels & formatting
     ax.set_xlabel("Country")

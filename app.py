@@ -204,18 +204,17 @@ def page3():
 
     #Predicted values
     fig, ax = plt.subplots()
-    ax.scatter(df["Quality of Life Index"], df["Predicted Quality of Life"], 
-           color="blue", label="Predicted", alpha=0.6)
-    #Perfect values
-    ax.plot([df["Quality of Life Index"].min(), df["Quality of Life Index"].max()], 
-        [df["Quality of Life Index"].min(), df["Quality of Life Index"].max()], 
-        color="red", linestyle="dashed", label="Perfect Fit")
+    ax.plot(df.index, df["Quality_of_Life_Index"], label="Actual", color="blue", linewidth=2)
 
-    ax.set_xlabel("Actual Values")
-    ax.set_ylabel("Predicted Values")
+    # Plot predicted values in orange (dashed line)
+    ax.plot(df.index, df["Predicted_Quality_of_Life"], label="Predicted", color="orange", linestyle="dashed", linewidth=2)
+    
+    # Labels & title
+    ax.set_xlabel("Index")
+    ax.set_ylabel("Quality of Life Index")
     ax.set_title("Actual vs. Predicted Quality of Life Index")
     ax.legend()
-
+    
     st.pyplot(fig)
 
 

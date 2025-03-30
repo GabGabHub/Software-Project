@@ -121,7 +121,8 @@ def preprocess_data(df):
 
     return df
 
-def remove_outliers_std(df, num_cols, threshold=3):
+def remove_outliers_std(df, threshold=3):
+    num_cols = df.select_dtypes(include=['number']).columns
     z_scores = np.abs((df[num_cols] - df[num_cols].mean()) / df[num_cols].std())
     return df[(z_scores < threshold).all(axis=1)]
 
@@ -165,8 +166,7 @@ def page2():
     df = st.session_state.df
     df = preprocess_data(df.iloc[:,1:])
 
-    num_cols = df.select_dtypes(include=['number']).columns
-    df = remove_outliers_std(df, num_cols, threshold=3)
+    df = remove_outliers_std(df threshold=3)
 
     #doing the HCA
     df = hierarchical_clustering(df)

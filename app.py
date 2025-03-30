@@ -189,7 +189,7 @@ def page2():
 
 def page3():
     st.title("Multiple Regression Model")
-
+    df = st.session_state.df
     st.write(df.columns)
     
     Y = df["Quality of Life Index"]  

@@ -189,6 +189,8 @@ def page2():
 
 def page3():
     st.title("Multiple Regression Model")
+
+    st.write(df.columns)
     
     Y = df["Quality of Life Index"]  
     X = df[["Cost of Living_Index", "Health Care Index", "Pollution Index"]]

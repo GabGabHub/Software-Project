@@ -172,7 +172,9 @@ def page2():
     df = hierarchical_clustering(df)
     df, X_pca = kmeans_clustering(df)
     
-    st.markdown("## Processed Data")
+    st.markdown("## Processed Data")  # Markdown forces it to render
+    st.write("### Debug: This should be visible")  # Extra check
+    st.dataframe(df)
     st.dataframe(df)
 
     st.write("## K-Means Clustering Visualization")

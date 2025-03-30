@@ -200,7 +200,7 @@ def page3():
     
     predictions = model.predict(X)  
     df["Predicted Quality of Life"] = predictions 
-    st.dataframe(df[["Quality of Life Index", "Predicted Quality of Life"]])
+    st.dataframe(df[["Country", "Quality of Life Index", "Predicted Quality of Life"]])
 
    
     # Select top N countries for readability (optional)

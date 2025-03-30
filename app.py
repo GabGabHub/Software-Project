@@ -204,10 +204,10 @@ def page3():
 
     #Predicted values
     fig, ax = plt.subplots()
-    ax.plot(df.index, df["Quality_of_Life_Index"], label="Actual", color="blue", linewidth=2)
+    ax.plot(df.index, df["Quality of Life Index"], label="Actual", color="blue", linewidth=2)
 
     # Plot predicted values in orange (dashed line)
-    ax.plot(df.index, df["Predicted_Quality_of_Life"], label="Predicted", color="orange", linestyle="dashed", linewidth=2)
+    ax.plot(df.index, df["Predicted Quality of Life"], label="Predicted", color="orange", linestyle="dashed", linewidth=2)
     
     # Labels & title
     ax.set_xlabel("Index")

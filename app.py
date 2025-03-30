@@ -114,6 +114,8 @@ def page1():
     analysis_type = st.radio("Choose Analysis Type:", ("Pandas Methods", "Scipy Package"))
     dfm = st.session_state.df
 
+    dfm = dfm[1:]
+
     if analysis_type == "Pandas Methods":
         
         st.header("1. Pandas Methods")

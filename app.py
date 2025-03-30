@@ -193,18 +193,18 @@ def page3():
     st.write(df.columns)
     
     Y = df["Quality of Life Index"]  
-    X = df[["Cost of Living_Index", "Health Care Index", "Pollution Index"]]
+    X = df[["Cost of Living Index", "Health Care Index", "Pollution Index"]]
 
     X = sm.add_constant(X)
     model = sm.OLS(Y, X).fit()
     st.write(model.summary())
     
     predictions = model.predict(X)  
-    df["Predicted_Quality_of_Life"] = predictions 
-    st.dataframe(df[["Quality_of_Life_Index", "Predicted_Quality_of_Life"]])
+    df["Predicted Quality of Life"] = predictions 
+    st.dataframe(df[["Quality of Life Index", "Predicted Quality of Life"]])
     
     fig, ax = plt.subplots()
-    ax.scatter(df["Quality_of_Life_Index"], df["Predicted_Quality_of_Life"], alpha=0.5)
+    ax.scatter(df["Quality of Life Index"], df["Predicted Quality of Life"], alpha=0.5)
     ax.set_xlabel("Actual Quality of Life Index")
     ax.set_ylabel("Predicted Quality of Life Index")
     ax.set_title("Actual vs Predicted Values")

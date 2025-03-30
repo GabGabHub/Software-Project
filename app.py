@@ -62,7 +62,7 @@ def home_page():
     st.title("Database")
     df = pd.read_csv('quality_of_life_indices_by_country.csv')
     st.session_state.df = df  # Store the DataFrame
-    st.dataframe(df
+    st.dataframe(df)
                 
     world = gpd.read_file("https://naciscdn.org/naturalearth/110m/cultural/ne_110m_admin_0_countries.zip")
     #fig, ax = plt.subplots(figsize=(10, 10))

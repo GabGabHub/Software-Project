@@ -65,8 +65,9 @@ def home_page():
     world = gpd.read_file("https://naciscdn.org/naturalearth/110m/cultural/ne_110m_admin_0_countries.zip")
     fig, ax = plt.subplots(figsize=(10, 10))
     cities = gpd.read_file("https://naciscdn.org/naturalearth/10m/cultural/ne_10m_populated_places.zip")
-    world.plot()
-    cities.plot()
+    world.plot(ax=ax, color="lightgray", edgecolor="black", linewidth=1)
+    cities.plot(ax=ax, color="lightgray", edgecolor="black", linewidth=1)
+    plt.show()
 
 def page1():
     st.title("Page 1")
